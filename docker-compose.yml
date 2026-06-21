@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./backend
+    ports: ["8000:8000"]
+    environment:
+      - DATABASE_URL=sqlite:///./omnirag.db
+      - STORAGE_DIR=/app/storage
+    volumes: ["backend-storage:/app/storage"]
+  frontend:
+    build: ./frontend
+    ports: ["5173:5173"]
+    environment:
+      - VITE_API_URL=http://localhost:8000/api
+    depends_on: [backend]
+  redis:
+    image: redis:7-alpine
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: omnirag
+      POSTGRES_USER: omnirag
+      POSTGRES_DB: omnirag
+volumes: {backend-storage: {}}
