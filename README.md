@@ -146,7 +146,7 @@ cp backend/.env.example backend/.env
 | `DELETE` | `/api/history/{id}` | Delete one old chat. |
 | `DELETE` | `/api/history` | Clear all history. |
 
-Backward-compatible `/api/workspaces/...` aliases remain for older clients, but the frontend uses the simpler document-chat endpoints.
+The public API intentionally uses the simple document-chat endpoints above; no workspace routes are required by the frontend.
 
 ## Recommended Use
 

@@ -62,3 +62,22 @@ def test_pptx_upload_summarize_and_history_delete(tmp_path):
         assert history
         delete_response = client.delete(f"/api/history/{history[0]['id']}")
         assert delete_response.status_code == 200
+
+
+def test_conflict_markers_absent_in_core_files():
+    files = [
+        '../README.md',
+        'app/api/routes.py',
+        'app/core/config.py',
+        'app/main.py',
+        'app/models/entities.py',
+        'app/rag/parser.py',
+        'app/services/ai.py',
+        'tests/test_api.py',
+        '../frontend/src/App.tsx',
+        '../frontend/src/style.css',
+    ]
+    for file_name in files:
+        content = (__import__('pathlib').Path(__file__).resolve().parents[1] / file_name).resolve().read_text(encoding='utf-8')
+        for marker in ['<' * 7, '=' * 7, '>' * 7]:
+            assert marker not in content

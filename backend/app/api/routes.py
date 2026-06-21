@@ -235,33 +235,3 @@ def clear_history(session: Session = Depends(get_session)):
     session.exec(delete(Interaction).where(Interaction.workspace_id == workspace.id))
     session.commit()
     return {"deleted": "all"}
-
-
-# Backward-compatible aliases for the first generated build.
-@router.post("/workspaces")
-def create_workspace(session: Session = Depends(get_session)):
-    return _default_workspace(session)
-
-@router.get("/workspaces")
-def list_workspaces(session: Session = Depends(get_session)):
-    return [_default_workspace(session)]
-
-@router.post("/workspaces/{workspace_id}/documents")
-def upload_workspace_documents(workspace_id: int, files: list[UploadFile] = File(...), session: Session = Depends(get_session)):
-    return upload_documents(files, session)
-
-@router.get("/workspaces/{workspace_id}/documents")
-def workspace_documents(workspace_id: int, session: Session = Depends(get_session)):
-    return list_documents(session)
-
-@router.post("/workspaces/{workspace_id}/chat")
-async def workspace_chat(workspace_id: int, data: PromptIn, session: Session = Depends(get_session)):
-    return await chat(data, session)
-
-@router.post("/workspaces/{workspace_id}/summaries")
-async def workspace_summary(workspace_id: int, data: PromptIn, session: Session = Depends(get_session)):
-    return await summarize(data, session)
-
-@router.post("/workspaces/{workspace_id}/export")
-def export(workspace_id: int, data: ExportIn):
-    return {"filename": f"{data.title}.{data.format}", "content": data.content, "format": data.format}
